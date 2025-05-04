@@ -1,5 +1,6 @@
-import BottomTabNavigator from './navigation/BottomTab';
+import AppNavigator from './navigation/AppNavigator';
+import BottomTabNavigator from './navigation/AppNavigator';
 
 export default function App() {
-  return <BottomTabNavigator />;
+  return <AppNavigator />;
 }
