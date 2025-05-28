@@ -30,8 +30,8 @@ export default function HomeScreen() {
 
       // let location = await Location.getCurrentPositionAsync({});
       // const { latitude, longitude } = location.coords;
-      const latitude = 53.3;
-      const longitude = -9;
+      const latitude = 53.275476;
+      const longitude = -9.05;
       setRegion({
         latitude,
         longitude,
@@ -68,7 +68,7 @@ export default function HomeScreen() {
                 longitude: realmon.longitude,
               }}
               title={realmon.speciesName}
-              description={realmon.source}
+              description={realmon.username}
               onPress={() => navigation.navigate('RealmonDetail', {
                 id: realmon.id,
                 latitude: realmon.latitude,

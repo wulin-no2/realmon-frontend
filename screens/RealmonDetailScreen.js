@@ -33,12 +33,16 @@ const RealmonDetailScreen = ({ route, navigation }) => {
     <View style={styles.container}>
       <Image source={{ uri: imageUrl }} style={styles.image} />
       <Text style={styles.title}>{speciesName}</Text>
-      <Text>Category: {speciesIcon} {category}</Text>
-      <Text>Found by: {observerName} from {source}</Text>
-      <Text>Time: {new Date(timestamp).toLocaleString()}</Text>
-      <Text>Location: {latitude}, {longitude}</Text>
+      <Text >Category:</Text> 
+      <Text style={styles.info}>{speciesIcon} {category}</Text>
+      <Text >Found by: </Text> 
+      <Text style={styles.info}>{observerName} from {source}</Text>
+      <Text >Time:  </Text> 
+      <Text style={styles.info}>{new Date(timestamp).toLocaleString()}</Text>
+      <Text >Location:  </Text> 
+      <Text style={styles.info}>{latitude}, {longitude}</Text>
       <Text style={styles.link} onPress={() => Linking.openURL(wikiUrl)}>
-        Check Wiki
+        Find Out More From WikiPedia
       </Text>
       <Button title="I found it!" onPress={handleFound} />
     </View>
@@ -47,9 +51,11 @@ const RealmonDetailScreen = ({ route, navigation }) => {
 
 const styles = StyleSheet.create({
   container: { padding: 20 },
-  image: { width: '100%', height: 200, borderRadius: 12 },
+  image: { width: '100%', height: 400, borderRadius: 12 },
   title: { fontSize: 24, fontWeight: 'bold', marginVertical: 10 },
-  link: { color: 'blue', textDecorationLine: 'underline', marginVertical: 10 },
+  link: { color: 'darkgreen', fontWeight: 'bold', fontSize: 16, marginBottom: 24,
+    marginVertical: 10 },
+  info: { fontWeight: 'bold', marginTop: 4, marginBottom: 4, fontSize: 16}
 });
 
 export default RealmonDetailScreen;
