@@ -135,7 +135,8 @@ export default function HomeScreen() {
     <View style={styles.container}>
       {region ? (
         <MapView style={styles.map} region={region}>
-          {realmons.map((realmon) => (
+          {/* {realmons.map((realmon) => (
+            
             <Marker
               key={realmon.id}
               coordinate={{
@@ -147,7 +148,21 @@ export default function HomeScreen() {
             >
             <Text style={{ fontSize: 24 }}>{realmon.speciesIcon}</Text>
             </Marker>
+          ))} */}
+          {realmons.map((realmon, index) => (
+            <Marker
+              key={realmon.id ? `realmon-${realmon.id}` : `fallback-${index}`}
+              coordinate={{
+                latitude: realmon.latitude,
+                longitude: realmon.longitude,
+              }}
+              title={realmon.speciesName}
+              description={realmon.source}
+            >
+              <Text style={{ fontSize: 20 }}>{realmon.speciesIcon}</Text>
+            </Marker>
           ))}
+
         </MapView>
       ) : (
         <ActivityIndicator size="large" style={styles.loading} />
