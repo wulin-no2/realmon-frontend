@@ -12,7 +12,6 @@ import { Ionicons } from "@expo/vector-icons";
 import MapView , { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import { useNavigation } from "@react-navigation/native";
-// import axios from "axios";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -20,81 +19,7 @@ export default function HomeScreen() {
   const [realmons, setRealmons] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     let { status } = await Location.requestForegroundPermissionsAsync();
-  //     if (status !== "granted") {
-  //       console.error("Permission to access location was denied");
-  //       return;
-  //     }
-
-  //     let location = await Location.getCurrentPositionAsync({});
-  //     const { latitude, longitude } = location.coords;
-  //     setRegion({
-  //       latitude,
-  //       longitude,
-  //       latitudeDelta: 0.05,
-  //       longitudeDelta: 0.05,
-  //     });
-
-  //     try {
-  //       const response = await axios.get(
-  //         `http://localhost:8080/api/realmons/nearby?latitude=${latitude}&longitude=${longitude}&radiusKm=50`
-  //       );
-  //       setRealmons(response.data);
-  //     } catch (error) {
-  //       console.error("Error fetching nearby realmons", error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   })();
-  // }, []);
-
-  // return (
-  //   <View style={styles.container}>
-  //     <MapView style={styles.map} />
-
-  //     {/* Top Right Icons */}
-  //     <View style={styles.topRight}>
-  //       <TouchableOpacity
-  //         style={styles.iconButton}
-  //         onPress={() => navigation.navigate("Messages")}
-  //       >
-  //         <Ionicons name="mail-outline" size={24} color="black" />
-  //       </TouchableOpacity>
-  //       <TouchableOpacity
-  //         style={styles.iconButton}
-  //         onPress={() => navigation.navigate("Community")}
-  //       >
-  //         <Ionicons name="people-outline" size={24} color="black" />
-  //       </TouchableOpacity>
-  //     </View>
-
-  //     {/* Floating Scanner Button */}
-  //     <TouchableOpacity
-  //       style={styles.centerButton}
-  //       onPress={() => navigation.navigate("Scan")}
-  //     >
-  //       <Ionicons name="camera-outline" size={32} color="white" />
-  //     </TouchableOpacity>
-
-  //     {/* Bottom Left (Quest) */}
-  //     <TouchableOpacity
-  //       style={styles.bottomLeft}
-  //       onPress={() => navigation.navigate("Quest")}
-  //     >
-  //       <Ionicons name="calendar-outline" size={24} color="black" />
-  //     </TouchableOpacity>
-
-  //     {/* Bottom Right (Dex/Profile) */}
-  //     <TouchableOpacity
-  //       style={styles.bottomRight}
-  //       onPress={() => navigation.navigate("My")}
-  //     >
-  //       <Ionicons name="person-outline" size={24} color="black" />
-  //     </TouchableOpacity>
-  //   </View>
-  // );
+ 
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -135,20 +60,6 @@ export default function HomeScreen() {
     <View style={styles.container}>
       {region ? (
         <MapView style={styles.map} region={region}>
-          {/* {realmons.map((realmon) => (
-            
-            <Marker
-              key={realmon.id}
-              coordinate={{
-                latitude: realmon.latitude,
-                longitude: realmon.longitude,
-              }}
-              title={realmon.speciesName}
-              
-            >
-            <Text style={{ fontSize: 24 }}>{realmon.speciesIcon}</Text>
-            </Marker>
-          ))} */}
           {realmons.map((realmon, index) => (
             <Marker
               key={realmon.id ? `realmon-${realmon.id}` : `fallback-${index}`}
@@ -158,8 +69,20 @@ export default function HomeScreen() {
               }}
               title={realmon.speciesName}
               description={realmon.source}
+              onPress={() => navigation.navigate('RealmonDetail', {
+                id: realmon.id,
+                speciesName: realmon.name,
+                classification: realmon.type,
+                observerName: realmon.userName,
+                timestamp: realmon.timestamp,
+                latitude: realmon.lat,
+                longitude: realmon.lng,
+                imageUrl: realmon.imageUrl,
+                wikipediaUrl: realmon.wikipediaUrl
+              })}
+              
             >
-              <Text style={{ fontSize: 20 }}>{realmon.speciesIcon}</Text>
+              <Text style={{ fontSize: 36 }}>{realmon.speciesIcon}</Text>
             </Marker>
           ))}
 

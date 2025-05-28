@@ -2,12 +2,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import HomeScreen from '../screens/HomeScreen';
-import RealmonScreen from '../screens/RealmonScreen';
 import ScannerScreen from '../screens/ScannerScreen';
 import QuestScreen from '../screens/QuestScreen';
 import MyScreen from '../screens/MyScreen';
 import MessagesScreen from '../screens/MessagesScreen';
 import CommunityScreen from '../screens/CommunityScreen';
+import RealmonDetailScreen from '../screens/RealmonDetailScreen';
+import RealmonDexScreen from '../screens/RealmonDexScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -25,7 +26,7 @@ export default function AppNavigator() {
         {/* All other pages: header shown with default title and back */}
         <Stack.Screen
           name="Realmon"
-          component={RealmonScreen}
+          component={RealmonDexScreen}
           options={{ title: 'RealMon Dex' }}
         />
         <Stack.Screen
@@ -52,6 +53,11 @@ export default function AppNavigator() {
           name="Community"
           component={CommunityScreen}
           options={{ title: 'Community' }}
+        />
+        <Stack.Screen
+          name="RealmonDetail"
+          component={RealmonDetailScreen}
+          options={{ title: 'Realmon Details' }}
         />
       </Stack.Navigator>
     </NavigationContainer>
