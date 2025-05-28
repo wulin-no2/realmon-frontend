@@ -4,19 +4,21 @@ import { View, Text, Image, Button, Linking, StyleSheet } from 'react-native';
 const RealmonDetailScreen = ({ route, navigation }) => {
   const {
     speciesName,
-    classification,
+    speciesIcon,
+    source,
+    category,
     observerName,
     timestamp,
     latitude,
     longitude,
     imageUrl,
-    wikipediaUrl,
+    wikiUrl,
     id,
   } = route.params;
 
   const handleFound = async () => {
     try {
-      await fetch(`http://192.168.1.185:8080/api/realmons/collect`, {
+      await fetch(`http://192.168.1.185:8080/api/user/collect`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ realmonId: id }),
@@ -31,12 +33,12 @@ const RealmonDetailScreen = ({ route, navigation }) => {
     <View style={styles.container}>
       <Image source={{ uri: imageUrl }} style={styles.image} />
       <Text style={styles.title}>{speciesName}</Text>
-      <Text>Category:{classification}</Text>
-      <Text>Found by: {observerName}</Text>
+      <Text>Category: {speciesIcon} {category}</Text>
+      <Text>Found by: {observerName} from {source}</Text>
       <Text>Time: {new Date(timestamp).toLocaleString()}</Text>
       <Text>Location: {latitude}, {longitude}</Text>
-      <Text style={styles.link} onPress={() => Linking.openURL(wikipediaUrl)}>
-        Check Wiki:
+      <Text style={styles.link} onPress={() => Linking.openURL(wikiUrl)}>
+        Check Wiki
       </Text>
       <Button title="I found it!" onPress={handleFound} />
     </View>

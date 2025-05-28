@@ -71,14 +71,18 @@ export default function HomeScreen() {
               description={realmon.source}
               onPress={() => navigation.navigate('RealmonDetail', {
                 id: realmon.id,
-                speciesName: realmon.name,
-                classification: realmon.type,
-                observerName: realmon.userName,
-                timestamp: realmon.timestamp,
-                latitude: realmon.lat,
-                longitude: realmon.lng,
+                latitude: realmon.latitude,
+                longitude: realmon.longitude,
+                timestamp: realmon.observedAt,
                 imageUrl: realmon.imageUrl,
-                wikipediaUrl: realmon.wikipediaUrl
+                source: realmon.source,
+
+                speciesName: realmon.speciesName,
+                speciesIcon: realmon.speciesIcon,
+                category: realmon.category,  
+                observerName: realmon.username,
+                
+                wikiUrl: realmon.wikiUrl
               })}
               
             >
