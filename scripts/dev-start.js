@@ -34,9 +34,18 @@ async function checkApiReachable(url) {
 
 function startExpo() {
   console.log('🚀 Launching Expo...');
-  const expo = exec('npx expo start', { stdio: 'inherit' });
-  expo.stdout.pipe(process.stdout);
-  expo.stderr.pipe(process.stderr);
+//   const expo = exec('npx expo start', { stdio: 'inherit' });
+//     const { spawn } = require('child_process');
+//     const expo = spawn('npx', ['expo', 'start'], { stdio: 'inherit' });
+
+//   expo.stdout.pipe(process.stdout);
+//   expo.stderr.pipe(process.stderr);
+        const { spawn } = require('child_process');
+        spawn('npx', ['expo', 'start'], {
+        stdio: 'inherit',
+        shell: true
+        });
+
 }
 
 // Main logic

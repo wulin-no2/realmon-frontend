@@ -68,6 +68,7 @@ export default function HomeScreen() {
           {realmons.map((realmon, index) => (
             <Marker
               key={realmon.id ? `realmon-${realmon.id}` : `fallback-${index}`}
+              
               coordinate={{
                 latitude: realmon.latitude,
                 longitude: realmon.longitude,
@@ -93,9 +94,9 @@ export default function HomeScreen() {
               
             >
               <Text style={{ fontSize: 36 }}>{realmon.speciesIcon}</Text>
+              
             </Marker>
           ))}
-
         </MapView>
       ) : (
         <ActivityIndicator size="large" style={styles.loading} />
