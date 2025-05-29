@@ -6,7 +6,10 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "dev-start": "node scripts/dev-start.js",
+    "dev": "EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0 expo start"
+
   },
   "dependencies": {
     "@expo/metro-runtime": "~5.0.4",
@@ -15,6 +18,7 @@
     "@react-navigation/native-stack": "^7.3.11",
     "axios": "^1.9.0",
     "expo": "~53.0.7",
+    "expo-image-picker": "~16.1.4",
     "expo-location": "~18.1.5",
     "expo-status-bar": "~2.2.3",
     "react": "19.0.0",
@@ -26,11 +30,13 @@
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.10.0",
     "react-native-vector-icons": "^10.2.0",
-    "react-native-web": "^0.20.0",
-    "expo-image-picker": "~16.1.4"
+    "react-native-web": "^0.20.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.20.0"
+    "@babel/core": "^7.20.0",
+    "dotenv": "^16.5.0",
+    "ngrok": "^5.0.0-beta.2",
+    "node-fetch": "^2.7.0"
   },
   "private": true
 }

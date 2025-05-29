@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, Button, Image, ActivityIndicator, FlatList, Linking, StyleSheet, Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { BASE_URL} from '../config/api';
 
 export default function ScannerScreen() {
   const [imageUri, setImageUri] = useState(null);
@@ -55,7 +56,10 @@ export default function ScannerScreen() {
         name: 'scan.jpg',
       });
 
-      const response = await fetch('http://192.168.1.185:8080/api/scan', {
+      const response = await fetch(
+        // 'http://192.168.1.185:8080/api/scan'
+        `${BASE_URL}/api/scan`
+        , {
         method: 'POST',
         headers: {
           'Content-Type': 'multipart/form-data',

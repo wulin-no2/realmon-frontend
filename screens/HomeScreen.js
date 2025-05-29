@@ -12,6 +12,7 @@ import { Ionicons } from "@expo/vector-icons";
 import MapView , { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import { useNavigation } from "@react-navigation/native";
+import { BASE_URL} from "../config/api";
 
 export default function HomeScreen() {
   const navigation = useNavigation();
@@ -40,8 +41,12 @@ export default function HomeScreen() {
       });
 
       try {
+        console.log("Fetching from:", `${BASE_URL}/api/observations/nearby?lat=${latitude}&lon=${longitude}&radiusKm=50`);
+
         const response = await fetch(
-          `http://192.168.1.185:8080/api/observations/nearby?lat=${latitude}&lon=${longitude}&radiusKm=50`
+          // `http://192.168.1.185:8080/api/observations/nearby?lat=${latitude}&lon=${longitude}&radiusKm=50`
+          `${BASE_URL}/api/observations/nearby?lat=${latitude}&lon=${longitude}&radiusKm=50`
+
         );
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
