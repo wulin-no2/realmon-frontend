@@ -99,7 +99,7 @@ export default function ScannerScreen() {
             <Text style={styles.meta}>{item.category} • Score: {item.score.toFixed(2)}</Text>
             {item.wikiUrl && (
               <Text style={styles.link} onPress={() => Linking.openURL(item.wikiUrl)}>
-                🔗 View on Wikipedia
+                🔗 View more on Wikipedia
               </Text>
             )}
           </View>
