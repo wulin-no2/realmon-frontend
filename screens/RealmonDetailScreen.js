@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, Image, Button, Linking, StyleSheet } from 'react-native';
+import { BASE_URL } from '../config/api';
 
 const RealmonDetailScreen = ({ route, navigation }) => {
   const {
@@ -19,7 +20,10 @@ const RealmonDetailScreen = ({ route, navigation }) => {
 
   const handleFound = async () => {
     try {
-      await fetch(`http://192.168.1.185:8080/api/user/collect`, {
+      await fetch(
+        // `http://192.168.1.185:8080/api/user/collect`
+        `${BASE_URL}/api/user/collect`
+        , {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ realmonId: id }),
