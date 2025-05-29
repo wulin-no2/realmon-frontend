@@ -4,6 +4,7 @@ import { View, Text, Image, Button, Linking, StyleSheet } from 'react-native';
 const RealmonDetailScreen = ({ route, navigation }) => {
   const {
     speciesName,
+    scientificName,
     speciesIcon,
     source,
     category,
@@ -33,6 +34,9 @@ const RealmonDetailScreen = ({ route, navigation }) => {
     <View style={styles.container}>
       <Image source={{ uri: imageUrl }} style={styles.image} />
       <Text style={styles.title}>{speciesName}</Text>
+      
+      <Text >Scientific Name:</Text> 
+      <Text style={styles.info}>{scientificName} </Text>
       <Text >Category:</Text> 
       <Text style={styles.info}>{speciesIcon} {category}</Text>
       <Text >Found by: </Text> 

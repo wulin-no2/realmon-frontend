@@ -78,6 +78,7 @@ export default function HomeScreen() {
                 source: realmon.source,
 
                 speciesName: realmon.speciesName,
+                scientificName: realmon.scientificName,
                 speciesIcon: realmon.speciesIcon,
                 category: realmon.category,  
                 observerName: realmon.username,
