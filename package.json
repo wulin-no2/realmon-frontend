@@ -7,7 +7,7 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "dev-start": "node scripts/dev-start.js",
+    "dev-start": "EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0 node scripts/dev-start.js",
     "dev": "EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0 expo start"
 
   },
