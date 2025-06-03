@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "Node16",
+    "jsx": "react-native",
+    "moduleResolution": "node16",
+    "allowJs": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true
+  },
+  "include": ["src", "config", "scripts"],
+  "exclude": ["node_modules", "dist", "build"],
+  "extends": "expo/tsconfig.base"
+}
