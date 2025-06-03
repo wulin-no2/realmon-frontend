@@ -1,15 +1,15 @@
 {
+  "type": "module",
   "name": "realmon-frontend",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "dev-start": "EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0 node scripts/dev-start.js",
+    "dev-start": "EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0 node scripts/dev-start.ts",
     "dev": "EXPO_DEVTOOLS_LISTEN_ADDRESS=0.0.0.0 expo start"
-
   },
   "dependencies": {
     "@expo/metro-runtime": "~5.0.4",
@@ -28,15 +28,20 @@
     "react-native-maps": "1.20.1",
     "react-native-reanimated": "~3.17.4",
     "react-native-safe-area-context": "5.4.0",
-    "react-native-screens": "~4.10.0",
+    "react-native-screens": "~4.11.1",
     "react-native-vector-icons": "^10.2.0",
     "react-native-web": "^0.20.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@types/node": "^22.15.29",
+    "@types/node-fetch": "^2.6.12",
+    "@types/react": "~19.0.10",
+    "@types/react-native": "^0.72.8",
     "dotenv": "^16.5.0",
     "ngrok": "^5.0.0-beta.2",
-    "node-fetch": "^2.7.0"
+    "node-fetch": "^2.7.0",
+    "typescript": "^5.8.3"
   },
   "private": true
 }
