@@ -35,6 +35,7 @@ export default function HomeScreen() {
       console.error("Error fetching nearby realmons", error);
     } finally {
       setLoading(false);
+      console.log("📍 BASE_URL used from HomeScreen:", BASE_URL);
     }
   };
 
