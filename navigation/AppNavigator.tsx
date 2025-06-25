@@ -10,12 +10,13 @@ import MyScreen from "../screens/MyScreen";
 import QuestScreen from "../screens/QuestScreen";
 import RealmonDetailScreen from "../screens/RealmonDetailScreen";
 import RealmonDexScreen from "../screens/RealmonDexScreen";
-import ScannerScreen from "../screens/ScannerScreen";
+import ScanFlowController from "../screens/ScanFlowController";
+// import ScannerScreen from "../screens/ScannerScreen";
 
 export type RootStackParamList = {
   Home: undefined;
   Realmon: undefined;
-  Scan: undefined;
+  ScanFlow: undefined;
   Quest: undefined;
   My: undefined;
   Messages: undefined;
@@ -54,9 +55,9 @@ export default function AppNavigator() {
           options={{ title: "RealMon Dex" }}
         />
         <Stack.Screen
-          name="Scan"
-          component={ScannerScreen}
-          options={{ title: "Scan RealMon" }}
+          name="ScanFlow"
+          component={ScanFlowController}
+          options={{ headerShown: false }} 
         />
         <Stack.Screen
           name="Quest"

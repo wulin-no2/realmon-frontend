@@ -4,6 +4,9 @@ import { BASE_URL } from '../config/api';
 import { Realmon, SpeciesDetails } from "../types/types";
 import { ScrollView } from 'react-native'; 
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Platform } from 'react-native';
+import { showLocation } from 'react-native-map-link';
+
 
 
 const RealmonDetailScreen = ({ route, navigation }) => {
@@ -60,6 +63,43 @@ const RealmonDetailScreen = ({ route, navigation }) => {
       );
 
   }, [speciesId]);
+
+  // const handleGoFindIt = () => {
+  //   const url = Platform.select({
+  //     ios: `maps:0,0?q=${latitude},${longitude}`,
+  //     android: `geo:0,0?q=${latitude},${longitude}`,
+  //   });
+  //   if (url) {
+  //     Linking.openURL(url);
+  //   } else {
+  //     alert("Unsupported platform");
+  //   }
+  
+  //   // Linking.openURL(url);
+  // };
+  const handleGoFindIt = () => {
+    showLocation({
+      latitude: Number(latitude),
+      longitude: Number(longitude),
+      title: speciesName,
+      dialogTitle: 'Open in Maps',
+      dialogMessage: 'Which app would you like to use?',
+      cancelText: 'Cancel',
+      appsWhiteList: [
+        'apple-maps',
+        'google-maps',
+        'waze',
+        'citymapper',
+        'uber',
+        'lyft',
+        'moovit',
+        'here' 
+      ]
+    }).catch((err) => {
+      console.log("Map open failed:", err);
+      alert("Failed to open maps. Please check permissions or try again.");
+    });
+  };
 
   const handleFound = async () => {
     try {
@@ -150,8 +190,9 @@ const RealmonDetailScreen = ({ route, navigation }) => {
 
       </ScrollView>
       <View style={styles.bottomButton}>
-        {/* <Button title="I found it!" onPress={() => alert('Recorded!')} /> */}
-        <Button  title={founding ? "Submitting..." : "I found it!"} onPress={handleFound} disabled={founding}/>
+        {/* <Button  title={founding ? "Submitting..." : "I found it!"} onPress={handleFound} disabled={founding}/> */}
+        <Button title="Go Find it!" onPress={handleGoFindIt} />
+
       </View>
 
     </SafeAreaView>

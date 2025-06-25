@@ -1,3 +1,4 @@
+// HomeScreen.tsx
 import React, { useEffect, useState } from "react";
 import {
   View,
@@ -142,7 +143,7 @@ export default function HomeScreen() {
 
       <TouchableOpacity
         style={styles.centerButton}
-        onPress={() => navigation.navigate("Scan")}
+        onPress={() => navigation.navigate("ScanFlow")}
       >
         <Ionicons name="camera-outline" size={32} color="white" />
       </TouchableOpacity>
