@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+// HomeScreen.tsx
+import React, { useEffect, useState, useRef } from "react";
 import {
   View,
   Text,
@@ -7,7 +8,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import MapView, { Marker, Region } from "react-native-maps";
+import MapView, { Marker, Region, MapViewProps } from "react-native-maps";
 import * as Location from "expo-location";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
@@ -18,8 +19,13 @@ import { Realmon } from "../types/types";
 export default function HomeScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const [region, setRegion] = useState<Region | null>(null);
+  const [currentLocation, setCurrentLocation] = useState<{ latitude: number; longitude: number } | null>(null);
+
   const [realmons, setRealmons] = useState<Realmon[]>([]);
   const [loading, setLoading] = useState(true);
+  const mapRef = useRef<MapView | null>(null);
+
+
 
   const fetchNearby = async (lat: number, lon: number) => {
     try {
@@ -35,6 +41,7 @@ export default function HomeScreen() {
       console.error("Error fetching nearby realmons", error);
     } finally {
       setLoading(false);
+      console.log("📍 BASE_URL used from HomeScreen:", BASE_URL);
     }
   };
 
@@ -54,33 +61,31 @@ export default function HomeScreen() {
         latitudeDelta: 0.05,
         longitudeDelta: 0.05,
       };
+      setCurrentLocation(initialRegion); 
       setRegion(initialRegion);
       await fetchNearby(latitude, longitude);
 
-      // const latitude = 53.275476;
-      // const longitude = -9.05;
-
-      // try {
-      //   const response = await fetch(
-      //     `${BASE_URL}/api/observations/nearby?lat=${latitude}&lon=${longitude}&radiusKm=5`
-      //   );
-      //   if (!response.ok) {
-      //     throw new Error(`HTTP error! status: ${response.status}`);
-      //   }
-      //   const data: Realmon[] = await response.json();
-      //   setRealmons(data);
-      // } catch (error) {
-      //   console.error("Error fetching nearby realmons", error);
-      // } finally {
-      //   setLoading(false);
-      // }
     })();
   }, []);
 
+  useEffect(() => {
+    const interval = setInterval(async () => {
+      const loc = await Location.getCurrentPositionAsync({});
+      setCurrentLocation({
+        latitude: loc.coords.latitude,
+        longitude: loc.coords.longitude,
+        
+      });
+    }, 10000); //update location every 10s
+  
+    return () => clearInterval(interval);
+  }, []);
+  
   return (
     <View style={styles.container}>
       {region ? (
         <MapView 
+        ref={mapRef}
         style={styles.map} 
         region={region}
         onRegionChangeComplete={(newRegion) => {
@@ -88,7 +93,18 @@ export default function HomeScreen() {
           fetchNearby(newRegion.latitude, newRegion.longitude);
         }}
         >
-          
+          {/* current location Marker */}
+          {currentLocation && (
+            <Marker
+              coordinate={{
+                latitude: currentLocation.latitude,
+                longitude: currentLocation.longitude,
+              }}
+              title="You are here"
+              pinColor="blue"
+            />
+          )}
+          {/* realmon markers */}
           {realmons.map((realmon, index) => (
             <Marker
               key={realmon.id ? `realmon-${realmon.id}` : `fallback-${index}`}
@@ -141,7 +157,7 @@ export default function HomeScreen() {
 
       <TouchableOpacity
         style={styles.centerButton}
-        onPress={() => navigation.navigate("Scan")}
+        onPress={() => navigation.navigate("ScanFlow")}
       >
         <Ionicons name="camera-outline" size={32} color="white" />
       </TouchableOpacity>
@@ -159,6 +175,22 @@ export default function HomeScreen() {
       >
         <Ionicons name="person-outline" size={24} color="black" />
       </TouchableOpacity>
+
+          <TouchableOpacity
+      style={styles.recenterButton}
+      onPress={() => {
+        if (currentLocation && mapRef.current) {
+          mapRef.current.animateToRegion({
+            ...currentLocation,
+            latitudeDelta: 0.05,
+            longitudeDelta: 0.05,
+          }, 1000);
+        }
+      }}
+    >
+      <Ionicons name="locate" size={24} color="black" />
+    </TouchableOpacity>
+
     </View>
   );
 }
@@ -206,6 +238,15 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 40,
     right: 20,
+    backgroundColor: "white",
+    padding: 10,
+    borderRadius: 20,
+    elevation: 3,
+  },
+  recenterButton: {
+    position: "absolute",
+    right: 20,
+    bottom: 100,
     backgroundColor: "white",
     padding: 10,
     borderRadius: 20,
