@@ -7,13 +7,14 @@ import CommunityScreen from "../screens/CommunityScreen";
 import HomeScreen from "../screens/HomeScreen";
 import MessagesScreen from "../screens/MessagesScreen";
 import MyScreen from "../screens/MyScreen";
-import QuestScreen from "../screens/QuestScreen";
+import QuestScreen from "../screens/DailyQuestScreen";
 import RealmonDetailScreen from "../screens/RealmonDetailScreen";
 import RealmonDexScreen from "../screens/RealmonDexScreen";
 import ScanFlowController from "../screens/ScanFlowController";
 import ScanResultScreen from "../screens/ScanResultScreen";
 import LoginScreen from "../screens/LoginScreen";
 import AuthGate from "../screens/AuthGate";
+import DailyQuestScreen from "../screens/DailyQuestScreen";
 
 // import ScannerScreen from "../screens/ScannerScreen";
 
@@ -85,7 +86,7 @@ export default function AppNavigator() {
         />
         <Stack.Screen
           name="Quest"
-          component={QuestScreen}
+          component={DailyQuestScreen}
           options={{ title: "Daily Quests" }}
         />
         <Stack.Screen

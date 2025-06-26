@@ -88,7 +88,7 @@ const ScanResultScreen = () => {
         )}
 
         <View style={{ marginTop: 24 }}>
-          <Button title="✅ I Found It!" onPress={handleFound} />
+          <Button title="I Found It!" onPress={handleFound} />
         </View>
 
         <Text style={styles.disclaimer}>
