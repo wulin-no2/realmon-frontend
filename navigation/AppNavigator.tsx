@@ -5,7 +5,7 @@ import React from "react";
 
 import CommunityScreen from "../screens/CommunityScreen";
 import HomeScreen from "../screens/HomeScreen";
-import MessagesScreen from "../screens/MessagesScreen";
+import MessagesScreen from "../screens/MessageScreen";
 import MyScreen from "../screens/MyScreen";
 import QuestScreen from "../screens/DailyQuestScreen";
 import RealmonDetailScreen from "../screens/RealmonDetailScreen";
@@ -15,6 +15,7 @@ import ScanResultScreen from "../screens/ScanResultScreen";
 import LoginScreen from "../screens/LoginScreen";
 import AuthGate from "../screens/AuthGate";
 import DailyQuestScreen from "../screens/DailyQuestScreen";
+import MessageScreen from "../screens/MessageScreen";
 
 // import ScannerScreen from "../screens/ScannerScreen";
 
@@ -96,7 +97,7 @@ export default function AppNavigator() {
         />
         <Stack.Screen
           name="Messages"
-          component={MessagesScreen}
+          component={MessageScreen}
           options={{ title: "Messages" }}
         />
         <Stack.Screen
