@@ -27,4 +27,3 @@ export const authFetch = async (
   }
 };
 
-// token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzUwODkzNTI1LCJleHAiOjE3NTE0OTgzMjV9.pepa6MZyflMSDcJ_b52CCdSCrc0pQ8fVMXa31CwYFoE
