@@ -1,4 +1,4 @@
-
+// AppNavigator.tsx
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
@@ -11,16 +11,24 @@ import QuestScreen from "../screens/QuestScreen";
 import RealmonDetailScreen from "../screens/RealmonDetailScreen";
 import RealmonDexScreen from "../screens/RealmonDexScreen";
 import ScanFlowController from "../screens/ScanFlowController";
+import ScanResultScreen from "../screens/ScanResultScreen";
+import LoginScreen from "../screens/LoginScreen";
+import AuthGate from "../screens/AuthGate";
+
 // import ScannerScreen from "../screens/ScannerScreen";
 
 export type RootStackParamList = {
   Home: undefined;
   Realmon: undefined;
   ScanFlow: undefined;
+  // ScanResult: undefined;
+  
   Quest: undefined;
   My: undefined;
   Messages: undefined;
   Community: undefined;
+  Login: undefined;
+  AuthGate: undefined;
   RealmonDetail: {
     id: number | null;
     latitude: number;
@@ -36,14 +44,30 @@ export type RootStackParamList = {
     observerName: string;
     wikiUrl: string;
   };
+  ScanResult: {
+    imageUri: string;
+    username: string;
+    timestamp: string;
+    location: { latitude: number; longitude: number };
+    speciesId: string;
+    speciesName: string;
+    scientificName: string;
+    speciesIcon: string;
+    category: string;
+    imageUrl: string;
+    wikiUrl: string;
+    score: number;
+  };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function AppNavigator() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
+    <NavigationContainer >
+      <Stack.Navigator initialRouteName="AuthGate">
+        <Stack.Screen name="AuthGate" component={AuthGate} options={{ headerShown: false }} />
+
         <Stack.Screen
           name="Home"
           component={HomeScreen}
@@ -84,6 +108,14 @@ export default function AppNavigator() {
           component={RealmonDetailScreen}
           options={{ title: "Realmon Details" }}
         />
+        <Stack.Screen
+          name="ScanResult"
+          component={ScanResultScreen}
+          options={{ title: "Scan Result" }}
+        />
+        <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+
+        
       </Stack.Navigator>
     </NavigationContainer>
   );

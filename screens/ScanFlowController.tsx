@@ -1,3 +1,4 @@
+// ScanFlowController.tsx
 import React, { useEffect } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
@@ -76,22 +77,21 @@ export default function ScanFlowController() {
 
         const best = data[0];
 
-        // jump to RealmonDetail page
-        navigation.replace('RealmonDetail', {
-          id: null,
-          speciesId: best.id,
-          speciesName: best.name,
-          scientificName: best.scientificName,
-          speciesIcon: best.icon || '❓',
-          category: best.category,
-          timestamp: new Date().toISOString(),
-          imageUrl: best.imageUrl,
-          latitude,
-          longitude,
-          source: 'user-scan',
-          observerName: 'You',
-          wikiUrl: best.wikiUrl || '',
-        });
+        // jump to scan result page
+        navigation.replace('ScanResult', {
+            imageUri: photoUri,
+            username: 'You',
+            timestamp: new Date().toISOString(),
+            location: { latitude, longitude },
+            speciesId: best.id,
+            speciesName: best.name,
+            scientificName: best.scientificName,
+            speciesIcon: best.icon || '❓',
+            category: best.category,
+            imageUrl: best.imageUrl,
+            wikiUrl: best.wikiUrl || '',
+            score: best.score || 0,
+          });
       } catch (error) {
         console.error('Scan error', error);
         Alert.alert('Error', 'Something went wrong. Please try again.');
