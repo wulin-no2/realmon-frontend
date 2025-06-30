@@ -5,10 +5,11 @@ import * as Location from 'expo-location';
 import { Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { BASE_URL } from '../config/api';
-import { StackNavigationProp } from '@react-navigation/stack';
+// import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-type NavigationProp = StackNavigationProp<RootStackParamList, 'ScanFlow'>;
+type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'ScanFlow'>;
 
 export default function ScanFlowController() {
   const navigation = useNavigation<NavigationProp>();
