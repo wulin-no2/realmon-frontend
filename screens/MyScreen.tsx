@@ -1,31 +1,71 @@
 import React from 'react';
+import { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { authFetch } from '../utils/authFetch';
 
-const user = {
-  name: 'testuser',
-  avatarUrl: '',
-  collected: 24,
-  badges: ['Plant', 'Insect'],
+interface RealmonItem {
+  speciesId: string;
+  speciesName: string;
+  speciesImageUrls: string[];
+}
+const badgeColors: Record<string, any> = {
+  PLANT: { backgroundColor: '#bbf7d0' },   // light green
+  INSECT: { backgroundColor: '#fef9c3' },  // light yellow
+  MAMMAL: { backgroundColor: '#e0f2fe' },
 };
 
-const realmonDeck = [
-  { id: 'r1', name: 'Butterfly', imageUrl: 'https://www.timeforkids.com/wp-content/uploads/2021/04/butterflies.jpg?w=1024', category: 'Insect' },
-  { id: 'r2', name: 'Maple Leaf', imageUrl: 'https://plantmegreen.com/cdn/shop/articles/WlG6sR0G59WQFO01fx9fjv3gdrKz5prK1656445268.jpg?crop=center&height=1200&v=1656519572&width=1200', category: 'Plant' },
-  { id: 'r3', name: 'Clover', imageUrl: 'https://parade.com/.image/t_share/MTkwNTgxNDU5NDY0MzY1OTQ4/four-leaf-clover-jpg.jpg', category: 'Plant' },
-];
-
-const badgeColors = {
-  Plant: { backgroundColor: '#bbf7d0' },   // light green
-  Insect: { backgroundColor: '#fef9c3' },  // light yellow
-};
-
-const badgeIcons = {
-  Plant: '🌿',
-  Insect: '🦋',
+const badgeIcons: Record<string, string> = {
+  PLANT: '🌿',
+  INSECT: '🦋',
+  MAMMAL: '🦊',
 };
 
 const MyScreen = () => {
+  const [user, setUser] = useState({
+    id: '',
+    username: '',
+    avatarUrl: '',
+    collected: 0,
+    badges: [] as string[],
+  });
+
+  const [realmonDeck, setRealmonDeck] = useState<RealmonItem[]>([]);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch user info
+        const resUser = await authFetch('/api/user/me');
+        const dataUser = await resUser.json();
+        console.log('🎯 Realmon Deck:', dataUser);
+
+
+        // Fetch collection
+        const resDeck = await authFetch('/api/user/collected');
+        const dataDeck = await resDeck.json();
+
+        console.log('🎯 Realmon Deck:', dataDeck);
+
+        setUser({
+          id: dataUser.id,
+          username: dataUser.username,
+          avatarUrl: dataUser.avatarUrl,
+          collected: dataDeck.totalCollected,
+          badges: dataDeck.badges || [],
+        });
+
+        setRealmonDeck(dataDeck.items || []);
+
+      } catch (err) {
+        console.error('Error loading data:', err);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <ScrollView style={styles.container}>
       {/* Header: Avatar + Name */}
@@ -37,7 +77,7 @@ const MyScreen = () => {
             <Icon name="person" size={36} color="#ffffff" />
           </View>
         )}
-        <Text style={styles.username}>{user.name}</Text>
+        <Text style={styles.username}>{user.username}</Text>
 
         <View style={styles.stats}>
           <Text style={styles.statText}>🌱 {user.collected} Realmons Collected</Text>
@@ -52,12 +92,15 @@ const MyScreen = () => {
       <FlatList
         data={realmonDeck}
         horizontal
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.speciesId}
         contentContainerStyle={styles.deckList}
         renderItem={({ item }) => (
           <View style={styles.deckCard}>
-            <Image source={{ uri: item.imageUrl }} style={styles.deckImage} />
-            <Text style={styles.deckName}>{item.name}</Text>
+            <Image 
+              source={{ uri: item.speciesImageUrls?.[0] || 'https://placehold.co/100x100' }}
+              style={styles.deckImage} 
+            />
+            <Text style={styles.deckName}>{item.speciesName}</Text>
           </View>
         )}
       />
@@ -66,7 +109,7 @@ const MyScreen = () => {
             <Text style={styles.sectionTitle}>Your Badges</Text>
       <View style={styles.badgeRow}>
         {user.badges.map((b) => (
-          <View key={b} style={[styles.badgeCircle, badgeColors[b]]}>
+          <View key={b} style={[styles.badgeCircle, badgeColors[b] || {backgroundColor: '#e5e7eb'}]}>
             <Text style={styles.badgeIcon}>{badgeIcons[b]}</Text>
           </View>
         ))}

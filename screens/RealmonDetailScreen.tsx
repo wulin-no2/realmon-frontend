@@ -33,14 +33,6 @@ const RealmonDetailScreen = ({ route, navigation }) => {
   useEffect(() => {
     if (!speciesId) return;
 
-    // fetch(`${BASE_URL}/api/species/${speciesId}`)
-    //   .then(res => res.json())
-    //   .then(data => setDetails(data))
-    //   .catch(err => {
-    //     console.error('Failed to fetch species details', err);
-    //     setDetails(null); // optional fallback
-    //   })
-    //   .finally(() => setLoading(false));
     fetch(`${BASE_URL}/api/species/${String(speciesId)}`)
       .then(res => {
         if (!res.ok) {
@@ -64,19 +56,7 @@ const RealmonDetailScreen = ({ route, navigation }) => {
 
   }, [speciesId]);
 
-  // const handleGoFindIt = () => {
-  //   const url = Platform.select({
-  //     ios: `maps:0,0?q=${latitude},${longitude}`,
-  //     android: `geo:0,0?q=${latitude},${longitude}`,
-  //   });
-  //   if (url) {
-  //     Linking.openURL(url);
-  //   } else {
-  //     alert("Unsupported platform");
-  //   }
   
-  //   // Linking.openURL(url);
-  // };
   const handleGoFindIt = () => {
     showLocation({
       latitude: Number(latitude),
@@ -119,13 +99,7 @@ const RealmonDetailScreen = ({ route, navigation }) => {
     }
   };
 
-  // if (loading) {
-  //   return (
-  //     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-  //       <ActivityIndicator size="large" />
-  //     </View>
-  //   );
-  // }
+  
   if (loading) {
     return <ActivityIndicator size="large" style={{ flex: 1, justifyContent: 'center' }} />;
   }
