@@ -1,4 +1,4 @@
-// HomeScreen.tsx
+// screens/HomeScreen.tsx
 import React, { useEffect, useState, useRef } from "react";
 import {
   View,

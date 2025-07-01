@@ -1,3 +1,4 @@
+// screens/MyScreen.tsx
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, FlatList } from 'react-native';
@@ -27,6 +28,7 @@ const MyScreen = () => {
     username: '',
     avatarUrl: '',
     collected: 0,
+    coins: 0,
     badges: [] as string[],
   });
 
@@ -38,8 +40,10 @@ const MyScreen = () => {
       try {
         // Fetch user info
         const resUser = await authFetch('/api/user/me');
-        const dataUser = await resUser.json();
-        console.log('🎯 Realmon Deck:', dataUser);
+        const UserInfo = await resUser.json();
+        console.log('🎯 Realmon Deck:', UserInfo);
+
+        const dataUser = UserInfo.user;
 
 
         // Fetch collection
@@ -53,6 +57,7 @@ const MyScreen = () => {
           username: dataUser.username,
           avatarUrl: dataUser.avatarUrl,
           collected: dataDeck.totalCollected,
+          coins: dataUser.coins,
           badges: dataDeck.badges || [],
         });
 
@@ -82,6 +87,7 @@ const MyScreen = () => {
         <View style={styles.stats}>
           <Text style={styles.statText}>🌱 {user.collected} Realmons Collected</Text>
           <Text style={styles.statText}>🏅 {user.badges.length} Badges Earned</Text>
+          <Text style={styles.statText}>💰 {user.coins} Coins Earned</Text>
         </View>
       </View>
 
