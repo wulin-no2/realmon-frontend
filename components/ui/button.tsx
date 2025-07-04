@@ -15,7 +15,10 @@ export const Button = ({ children, onPress, disabled }: ButtonProps) => {
       onPress={onPress}
       disabled={disabled}
       style={{
-        backgroundColor: disabled ? '#ccc' : '#4CAF50',
+        backgroundColor: disabled ? 
+        // '#ccc' 
+       '#065f46'
+        : '#4CAF50',
         paddingVertical: 10,
         paddingHorizontal: 16,
         borderRadius: 8,
