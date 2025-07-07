@@ -1,5 +1,5 @@
 // AppNavigator.tsx
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, NavigationContainerRef } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
 
@@ -64,9 +64,8 @@ export type RootStackParamList = {
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-export default function AppNavigator() {
-  return (
-    <NavigationContainer >
+const AppNavigator = React.forwardRef<NavigationContainerRef<any>, {}>((props, ref) => (
+  <NavigationContainer ref={ref}>
       <Stack.Navigator initialRouteName="AuthGate">
         <Stack.Screen name="AuthGate" component={AuthGate} options={{ headerShown: false }} />
 
@@ -120,5 +119,6 @@ export default function AppNavigator() {
         
       </Stack.Navigator>
     </NavigationContainer>
-  );
-}
+));
+
+export default AppNavigator;

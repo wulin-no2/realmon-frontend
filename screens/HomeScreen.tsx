@@ -1,29 +1,70 @@
 // screens/HomeScreen.tsx
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
+  Button,
+  
 } from "react-native";
+import * as Notifications from "expo-notifications";
+
 import { Ionicons } from "@expo/vector-icons";
-import MapView, { Marker, Region, MapViewProps } from "react-native-maps";
+import MapView, { Marker, Region,  } from "react-native-maps";
 import * as Location from "expo-location";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { BASE_URL } from "../config/api";
 import { RootStackParamList } from "../navigation/AppNavigator";
 import { Realmon } from "../types/types";
+import throttle from "lodash.throttle";
+
 
 export default function HomeScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const [region, setRegion] = useState<Region | null>(null);
+  // const [region, setRegion] = useState<Region | null>(null);
+  const [initialRegion, setInitialRegion] = useState<Region | null>(null);
+
   const [currentLocation, setCurrentLocation] = useState<{ latitude: number; longitude: number } | null>(null);
 
   const [realmons, setRealmons] = useState<Realmon[]>([]);
   const [loading, setLoading] = useState(true);
   const mapRef = useRef<MapView | null>(null);
+  
+
+  // for notification test
+  // const sendTestNotification = async () => {
+  //   console.log("Scheduling test notification...");
+  //   await Notifications.scheduleNotificationAsync({
+  //     content: {
+  //       title: "🎉 Test Notification",
+  //       body: "This is a test notification.",
+  //       sound: true,
+  //     },
+  //     trigger: null, // right away
+  //   });
+  // };
+
+  // auto trigger for notification test
+  // useEffect(() => {
+  //   const scheduleNotification = async () => {
+  //     await Notifications.scheduleNotificationAsync({
+        
+  //       content: {
+  //         title: "🌿 Welcome Back!",
+  //         body: "This is an auto-triggered test notification.",
+  //         sound: true,
+  //       },
+  //       trigger: { 
+  //         channelId: 'default',
+  //         seconds: 5 },
+  //     });
+  //   };
+  
+  //   scheduleNotification();
+  // }, []);
 
 
 
@@ -45,6 +86,7 @@ export default function HomeScreen() {
     }
   };
 
+    // Get user location once on mount
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -55,14 +97,18 @@ export default function HomeScreen() {
       const location = await Location.getCurrentPositionAsync({});
       const latitude = location.coords.latitude;
       const longitude = location.coords.longitude;
-      const initialRegion: Region = {
+      const initRegion: Region = {
         latitude,
         longitude,
         latitudeDelta: 0.05,
         longitudeDelta: 0.05,
       };
-      setCurrentLocation(initialRegion); 
-      setRegion(initialRegion);
+      // setCurrentLocation(initialRegion); 
+      // setRegion(initialRegion);
+      setInitialRegion(initRegion);
+      setCurrentLocation(initRegion);
+
+
       await fetchNearby(latitude, longitude);
 
     })();
@@ -80,18 +126,30 @@ export default function HomeScreen() {
   
     return () => clearInterval(interval);
   }, []);
+
+  // Throttled fetch for when user moves the map
+  const handleRegionChangeComplete = useCallback(
+    throttle((newRegion: Region) => {
+      fetchNearby(newRegion.latitude, newRegion.longitude);
+    }, 2000),
+    []
+  );
   
   return (
     <View style={styles.container}>
-      {region ? (
+      {initialRegion ? (
         <MapView 
         ref={mapRef}
         style={styles.map} 
-        region={region}
-        onRegionChangeComplete={(newRegion) => {
-          setRegion(newRegion);
-          fetchNearby(newRegion.latitude, newRegion.longitude);
-        }}
+        // region={region}
+        initialRegion={initialRegion}
+
+        // onRegionChangeComplete={(newRegion) => {
+        //   setRegion(newRegion);
+        //   fetchNearby(newRegion.latitude, newRegion.longitude);
+        // }}
+        onRegionChangeComplete={handleRegionChangeComplete}
+
         >
           {/* current location Marker */}
           {currentLocation && (
@@ -176,20 +234,23 @@ export default function HomeScreen() {
         <Ionicons name="person-outline" size={24} color="black" />
       </TouchableOpacity>
 
-          <TouchableOpacity
-      style={styles.recenterButton}
-      onPress={() => {
-        if (currentLocation && mapRef.current) {
-          mapRef.current.animateToRegion({
-            ...currentLocation,
-            latitudeDelta: 0.05,
-            longitudeDelta: 0.05,
-          }, 1000);
-        }
-      }}
-    >
-      <Ionicons name="locate" size={24} color="black" />
-    </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.recenterButton}
+        onPress={() => {
+          if (currentLocation && mapRef.current) {
+            mapRef.current.animateToRegion({
+              ...currentLocation,
+              latitudeDelta: 0.05,
+              longitudeDelta: 0.05,
+            }, 1000);
+          }
+        }}
+      >
+        <Ionicons name="locate" size={24} color="black" />
+      </TouchableOpacity>
+      {/* <Button title="Send Test Notification" onPress={sendTestNotification} /> */}
+
+
 
     </View>
   );
@@ -252,4 +313,5 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     elevation: 3,
   },
+  title: { fontSize: 20, marginBottom: 20 },
 });
