@@ -20,6 +20,7 @@ import { BASE_URL } from "../config/api";
 import { RootStackParamList } from "../navigation/AppNavigator";
 import { Realmon } from "../types/types";
 import throttle from "lodash.throttle";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 export default function HomeScreen() {
@@ -85,6 +86,71 @@ export default function HomeScreen() {
       console.log("📍 BASE_URL used from HomeScreen:", BASE_URL);
     }
   };
+  // get expo notification token every time 
+  useEffect(() => {
+    const uploadPushToken = async () => {
+      console.log("🚀 Trying to get push token...");  // see if uploadPushToken is running
+      // get permission
+      const { status } = await Notifications.requestPermissionsAsync();
+      if (status !== "granted") {
+        console.warn("❌ Notification permissions not granted");
+        return;
+      }
+  
+      // get Expo Push Token
+      const { data: expoPushToken } = await Notifications.getExpoPushTokenAsync();
+      console.log("✅ Expo Push Token:", expoPushToken);
+  
+      // get JWT
+      const jwt = await AsyncStorage.getItem("token");
+      if (!jwt) {
+        console.warn("No JWT found, skip uploading push token");
+        return;
+      }
+  
+      // upload to backend
+      const res = await fetch(`${BASE_URL}/api/user/me/push-token`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+        body: JSON.stringify({ expoPushToken }),
+      });
+  
+      if (res.ok) {
+        console.log("✅ Push token uploaded successfully");
+      } else {
+        console.error("❌ Failed to upload push token");
+      }
+    };
+  
+    uploadPushToken();
+  }, []);
+
+  // test token
+  // useEffect(() => {
+  //   const testPushToken = async () => {
+  //     console.log("🚀 HomeScreen: Trying to get push token...");
+  
+  //     try {
+  //       const { status } = await Notifications.requestPermissionsAsync();
+  //       if (status !== "granted") {
+  //         console.warn("❌ Permission not granted");
+  //         return;
+  //       }
+  
+  //       const { data: token } = await Notifications.getExpoPushTokenAsync();
+  //       console.log("✅ HomeScreen: Got Expo Push Token:", token);
+  //     } catch (e) {
+  //       console.error("❌ HomeScreen: Error getting push token:", e);
+  //     }
+  //   };
+  
+  //   testPushToken();
+  // }, []);
+  
+  
 
     // Get user location once on mount
   useEffect(() => {

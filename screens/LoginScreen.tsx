@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import * as Notifications from 'expo-notifications';
+import { registerPushToken } from '../utils/registerPushToken';
 
 export default function LoginScreen() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
@@ -21,16 +22,16 @@ export default function LoginScreen() {
     await Notifications.scheduleNotificationAsync({
       content: {
         title: "🌿 Daily Quest Ready!",
-        body: "Check today's Realmon challenges.",
+        body: "Come discover a new Realmon today 🌿",
         sound: true,
       },
       trigger: {
 
         channelId: 'default',
-        // hour: 8,
-        // minute: 0,
-        // repeats: true,
-        seconds: 5,  
+        hour: 9, // notification every day at 9
+        minute: 0,
+        repeats: true,
+        // seconds: 5,  
       },
      
     });
@@ -45,6 +46,7 @@ export default function LoginScreen() {
     }
 
     setLoading(true);
+    console.log("🚀 BASE_URL in runtime:", BASE_URL);
     try {
       const res = await fetch(`${BASE_URL}/api/user/login`, {
         method: 'POST',
@@ -52,12 +54,17 @@ export default function LoginScreen() {
         body: JSON.stringify({ username, password }),
       });
 
+      console.log("res from login api", res);
+
+
       if (res.status === 401) {
         Alert.alert('Login failed', 'Invalid username or password');
         return;
       }
 
       const data = await res.json();
+
+      // store token
       await AsyncStorage.setItem('token', data.token);
       await AsyncStorage.setItem('userId', data.userId.toString());
       await AsyncStorage.setItem('username', data.username);
@@ -65,6 +72,12 @@ export default function LoginScreen() {
       // add scheduleDailyReminder
       await scheduleDailyReminder();
 
+      // upload Expo Push Token. Move it to home screen
+      // await registerPushToken();
+
+
+
+      // jump to home screen
       navigation.reset({
         index: 0,
         routes: [{ name: 'Home' }],

@@ -25,6 +25,7 @@
     "expo-notifications": "~0.31.3",
     "expo-status-bar": "~2.2.3",
     "lodash.throttle": "^4.1.1",
+    "ngrok": "^5.0.0-beta.2",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-native": "0.79.4",
@@ -45,7 +46,6 @@
     "@types/react": "~19.0.10",
     "@types/react-native": "^0.72.8",
     "dotenv": "^16.5.0",
-    "ngrok": "^5.0.0-beta.2",
     "node-fetch": "^2.7.0",
     "typescript": "^5.8.3"
   },

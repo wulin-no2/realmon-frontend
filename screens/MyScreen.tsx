@@ -1,9 +1,13 @@
 // screens/MyScreen.tsx
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, FlatList } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, FlatList, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { authFetch } from '../utils/authFetch';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../navigation/AppNavigator';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface RealmonItem {
   speciesId: string;
@@ -33,6 +37,8 @@ const MyScreen = () => {
   });
 
   const [realmonDeck, setRealmonDeck] = useState<RealmonItem[]>([]);
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
 
 
   useEffect(() => {
@@ -120,6 +126,28 @@ const MyScreen = () => {
           </View>
         ))}
       </View>
+
+      {/* logout */}
+      <View style={{ alignItems: 'center', marginTop: 20, marginBottom: 40 }}>
+        <TouchableOpacity
+          style={{
+            backgroundColor: '#f87171',
+            paddingVertical: 10,
+            paddingHorizontal: 20,
+            borderRadius: 8,
+          }}
+          onPress={async () => {
+            await AsyncStorage.clear();
+            navigation.reset({
+              index: 0,
+              routes: [{ name: 'Login' }],
+            });
+          }}
+        >
+          <Text style={{ color: '#ffffff', fontWeight: 'bold' }}>Log Out</Text>
+        </TouchableOpacity>
+      </View>
+
     </ScrollView>
   );
 };
