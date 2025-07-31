@@ -126,6 +126,7 @@
 //   }
 // })();
 
+// scripts/dev-start.ts
 import 'dotenv/config';
 import { exec, spawn } from 'child_process';
 import fetch from 'node-fetch';

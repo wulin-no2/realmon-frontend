@@ -8,13 +8,19 @@
         "distribution": "internal",
         "android": {
           "buildType": "apk"
-        }
+        },
+        "ios": {
+        "buildConfiguration": "Release"
+      }
       },
       "production": {
         "distribution": "store",
         "android": {
           "buildType": "apk"
-        }
+        },
+        "ios": {
+        "buildConfiguration": "Release"
+      }
       }
     }
   }
