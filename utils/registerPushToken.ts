@@ -16,7 +16,7 @@ export async function registerPushToken() {
   }
 
   // upload to backend
-  const res = await fetch(`${BASE_URL}/api/users/me/push-token`, {
+  const res = await fetch(`${BASE_URL}/api/user/me/push-token`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

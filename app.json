@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "realmon-frontend",
+    "name": "Realmon Go",
     "slug": "realmon-frontend",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -8,20 +8,23 @@
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/icon-splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.lina2025.realmonfrontend",
+      "buildNumber": "07310042",
       "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "We need your location to show nearby Realmons.",
+        "NSCameraUsageDescription": "We need camera access to scan Realmons.",
+        "NSPhotoLibraryAddUsageDescription": "We need to save your Realmon photos.",
         "NSUserTrackingUsageDescription": "This identifier will be used to deliver personalized ads to you.",
-        "UIBackgroundModes": [
-          "remote-notification",
-          "remote-notification"
-        ],
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        }
       }
     },
     "android": {

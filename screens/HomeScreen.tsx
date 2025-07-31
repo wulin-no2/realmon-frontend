@@ -21,6 +21,30 @@ import { RootStackParamList } from "../navigation/AppNavigator";
 import { Realmon } from "../types/types";
 import throttle from "lodash.throttle";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { authFetch } from "../utils/authFetch";
+
+// daily reminder 
+const scheduleDailyReminder = async () => {
+  try {
+    await Notifications.cancelAllScheduledNotificationsAsync();
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "🌿 Daily Quest Ready!",
+        body: "Come discover a new Realmon today 🌿",
+        sound: true,
+      },
+      trigger: {
+        channelId: 'default',
+        hour: 9,
+        minute: 0,
+        repeats: true,
+      },
+    });
+    console.log('✅ Daily Quest daily reminder scheduled.');
+  } catch (err) {
+    console.error("📌 Notification schedule error:", err);
+  }
+};
 
 
 export default function HomeScreen() {
@@ -33,6 +57,22 @@ export default function HomeScreen() {
   const [realmons, setRealmons] = useState<Realmon[]>([]);
   const [loading, setLoading] = useState(true);
   const mapRef = useRef<MapView | null>(null);
+
+  // get notification permissions
+  useEffect(() => {
+    const askNotificationPermission = async () => {
+      console.log("🚀 Asking notification permission...");
+      const { status } = await Notifications.requestPermissionsAsync();
+      if (status !== "granted") {
+        console.warn("❌ Notification permissions not granted");
+      } else {
+        console.log("✅ Notification permission granted");
+        await scheduleDailyReminder(); //  Home screen auto Daily Quest reminder
+      }
+    };
+  
+    askNotificationPermission();
+  }, []);
   
 
   // for notification test
@@ -75,58 +115,65 @@ export default function HomeScreen() {
         `${BASE_URL}/api/observations/nearby?lat=${lat}&lon=${lon}&radiusKm=5`
       );
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        // throw new Error(`HTTP error! status: ${response.status}`);
+        console.warn(`⚠️ Nearby API failed: ${response.status}`);
+        setRealmons([]); // fallback null，avoid undefined
+        return;
       }
       const data: Realmon[] = await response.json();
-      setRealmons(data);
+      // setRealmons(data);
+      setRealmons(Array.isArray(data) ? data : []); // double check to avoid backend error
     } catch (error) {
       console.error("Error fetching nearby realmons", error);
+      setRealmons([]); // network error fallback
     } finally {
       setLoading(false);
       console.log("📍 BASE_URL used from HomeScreen:", BASE_URL);
     }
   };
   // get expo notification token every time 
-  useEffect(() => {
-    const uploadPushToken = async () => {
-      console.log("🚀 Trying to get push token...");  // see if uploadPushToken is running
-      // get permission
-      const { status } = await Notifications.requestPermissionsAsync();
-      if (status !== "granted") {
-        console.warn("❌ Notification permissions not granted");
-        return;
-      }
+  // useEffect(() => {
+  //   const uploadPushToken = async () => {
+  //     console.log("🚀 Trying to get push token...");  // see if uploadPushToken is running
+  //     // get permission
+  //     const { status } = await Notifications.requestPermissionsAsync();
+  //     if (status !== "granted") {
+  //       console.warn("❌ Notification permissions not granted");
+  //       return;
+  //     }
   
-      // get Expo Push Token
-      const { data: expoPushToken } = await Notifications.getExpoPushTokenAsync();
-      console.log("✅ Expo Push Token:", expoPushToken);
+  //     // get Expo Push Token
+  //     const { data: expoPushToken } = await Notifications.getExpoPushTokenAsync();
+  //     console.log("✅ Expo Push Token:", expoPushToken);
   
-      // get JWT
-      const jwt = await AsyncStorage.getItem("token");
-      if (!jwt) {
-        console.warn("No JWT found, skip uploading push token");
-        return;
-      }
+  //     // get JWT
+  //     const jwt = await AsyncStorage.getItem("token");
+  //     if (!jwt) {
+  //       console.warn("No JWT found, skip uploading push token");
+  //       return;
+  //     }
   
-      // upload to backend
-      const res = await fetch(`${BASE_URL}/api/user/me/push-token`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${jwt}`,
-        },
-        body: JSON.stringify({ expoPushToken }),
-      });
+  //     // upload to backend
+  //     const res = await fetch(`${BASE_URL}/api/user/me/push-token`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${jwt}`,
+  //       },
+  //       body: JSON.stringify({ expoPushToken }),
+  //     });
   
-      if (res.ok) {
-        console.log("✅ Push token uploaded successfully");
-      } else {
-        console.error("❌ Failed to upload push token");
-      }
-    };
+  //     if (res.ok) {
+  //       console.log("✅ Push token uploaded successfully");
+  //     } else {
+  //       console.error("❌ Failed to upload push token");
+  //     }
+  //   };
   
-    uploadPushToken();
-  }, []);
+  //   uploadPushToken();
+  // }, []);
+  
+  
 
   // test token
   // useEffect(() => {
@@ -155,11 +202,16 @@ export default function HomeScreen() {
     // Get user location once on mount
   useEffect(() => {
     (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        console.error("Permission to access location was denied");
-        return;
-      }
+      try{
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") {
+          console.error("Permission to access location was denied");
+          setLoading(false);
+          return;
+        }
+      }catch (e) {
+        console.error('Location init failed', e);
+     }
       const location = await Location.getCurrentPositionAsync({});
       const latitude = location.coords.latitude;
       const longitude = location.coords.longitude;
@@ -182,12 +234,17 @@ export default function HomeScreen() {
 
   useEffect(() => {
     const interval = setInterval(async () => {
-      const loc = await Location.getCurrentPositionAsync({});
-      setCurrentLocation({
-        latitude: loc.coords.latitude,
-        longitude: loc.coords.longitude,
-        
-      });
+      try{
+        const loc = await Location.getCurrentPositionAsync({});
+        setCurrentLocation({
+          latitude: loc.coords.latitude,
+          longitude: loc.coords.longitude,
+          
+        });
+      }catch(e){
+        console.warn("Location update failed", e);
+
+      }
     }, 10000); //update location every 10s
   
     return () => clearInterval(interval);
@@ -229,14 +286,14 @@ export default function HomeScreen() {
             />
           )}
           {/* realmon markers */}
-          {realmons.map((realmon, index) => (
+          {realmons && realmons.map((realmon, index) => (
             <Marker
               key={realmon.id ? `realmon-${realmon.id}` : `fallback-${index}`}
               coordinate={{
-                latitude: realmon.latitude,
-                longitude: realmon.longitude,
+                latitude: realmon.latitude || 53,
+                longitude: realmon.longitude || -9,
               }}
-              title={realmon.speciesName}
+              title={realmon.speciesName || 'Unknown'}
               description={realmon.username}
               onPress={() =>
                 navigation.navigate("RealmonDetail", {
@@ -256,7 +313,7 @@ export default function HomeScreen() {
                 })
               }
             >
-              <Text style={{ fontSize: 36 }}>{realmon.speciesIcon}</Text>
+              <Text style={{ fontSize: 36 }}>{realmon.speciesIcon || "❓"}</Text>
             </Marker>
           ))}
         </MapView>
@@ -381,3 +438,5 @@ const styles = StyleSheet.create({
   },
   title: { fontSize: 20, marginBottom: 20 },
 });
+
+
