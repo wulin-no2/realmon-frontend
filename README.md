@@ -37,3 +37,28 @@ RealMon Go is just getting started — it's still a bit rough, but it's going to
 - **DevOps**：AWS + Docker
 
 ---
+
+## Local development
+
+Install dependencies and create local environment settings:
+
+```bash
+npm ci
+cp .env.example .env
+```
+
+Start the Spring Boot backend on port `8080`, then run one of:
+
+```bash
+npm run web
+npm run ios
+npm run android
+```
+
+`EXPO_PUBLIC_API_BASE_URL` controls which backend the app uses:
+
+- Expo Web and the iOS Simulator can normally use `http://localhost:8080`.
+- An Android emulator normally uses `http://10.0.2.2:8080`.
+- A physical phone must use the development computer's LAN address, such as `http://192.168.1.100:8080`.
+
+Do not commit `.env`; only `.env.example` is tracked.

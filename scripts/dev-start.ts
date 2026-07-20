@@ -128,22 +128,15 @@
 
 // scripts/dev-start.ts
 import 'dotenv/config';
-import { exec, spawn } from 'child_process';
+import { spawn } from 'child_process';
 import fetch from 'node-fetch';
-import fs from 'fs';
 
 const USE_NGROK = process.env.USE_NGROK === 'true';
 const LOCAL_IP = process.env.LOCAL_IP || 'localhost';
 const API_PORT = process.env.API_PORT || '8080';
-const BASE_URL = USE_NGROK
+const BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || (USE_NGROK
   ? `http://localhost:${API_PORT}`
-  : `http://${LOCAL_IP}:${API_PORT}`;
-
-function updateApiConfig(url: string) {
-  const config = `export const BASE_URL: string = '${url}';\n`;
-  fs.writeFileSync('config/api.ts', config);
-  console.log(`✅ config/api.ts updated with BASE_URL: ${url}`);
-}
+  : `http://${LOCAL_IP}:${API_PORT}`);
 
 async function checkApiReachable(url: string): Promise<boolean> {
   try {
@@ -163,7 +156,11 @@ function startExpo() {
   console.log('🚀 Launching Expo...');
   spawn('npx', ['expo', 'start'], {
     stdio: 'inherit',
-    shell: true
+    shell: true,
+    env: {
+      ...process.env,
+      EXPO_PUBLIC_API_BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL || BASE_URL,
+    },
   });
 }
 
@@ -173,11 +170,10 @@ function startExpo() {
     console.log(`🌐 Starting ngrok on http://localhost:${API_PORT}...`);
     const ngrok = await import('ngrok'); // dynamic import , safer
     const url = await ngrok.default.connect(parseInt(API_PORT));
-    updateApiConfig(url);
     console.log(`🟢 ngrok tunnel active at: ${url}`);
+    process.env.EXPO_PUBLIC_API_BASE_URL = url;
     startExpo();
   } else {
-    updateApiConfig(BASE_URL);
     const reachable = await checkApiReachable(BASE_URL);
     if (!reachable) {
       console.log('⚠️ Warning: API seems unreachable. Continuing anyway...');
