@@ -16,7 +16,6 @@ export default function AuthGate() {
     (async () => {
       try {
         const token = await AsyncStorage.getItem('token');
-        console.log("🔍 AuthGate: token =", token);
         if (!token) {
           console.log("❌ No token found, redirecting to Login");
           navigation.replace('Login');
