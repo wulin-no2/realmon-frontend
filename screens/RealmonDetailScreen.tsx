@@ -6,6 +6,7 @@ import { ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Platform } from 'react-native';
 import { showLocation } from 'react-native-map-link';
+import { authFetch } from '../utils/authFetch';
 
 
 
@@ -33,13 +34,22 @@ const RealmonDetailScreen = ({ route, navigation }) => {
   useEffect(() => {
     if (!speciesId) return;
 
-    fetch(`${BASE_URL}/api/species/${String(speciesId)}`)
-      .then(res => {
-        if (!res.ok) {
-          throw new Error(`HTTP error! status: ${res.status}`);
-        }
-        return res.json();
-      })
+    const loadDetails = async () => {
+      const path = `/api/species/${String(speciesId)}`;
+      let res = await fetch(`${BASE_URL}${path}`);
+
+      if (res.status === 404) {
+        res = await authFetch(`${path}/generate`, { method: 'POST' });
+      }
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+
+      return res.json();
+    };
+
+    loadDetails()
       .then(data => setDetails(data))
       .catch(err => {
         console.log('speciesId is', speciesId);
@@ -212,5 +222,4 @@ const styles = StyleSheet.create({
 });
 
 export default RealmonDetailScreen;
-
 
