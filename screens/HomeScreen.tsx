@@ -188,7 +188,6 @@ export default function HomeScreen() {
   //       }
   
   //       const { data: token } = await Notifications.getExpoPushTokenAsync();
-  //       console.log("✅ HomeScreen: Got Expo Push Token:", token);
   //     } catch (e) {
   //       console.error("❌ HomeScreen: Error getting push token:", e);
   //     }
@@ -438,5 +437,4 @@ const styles = StyleSheet.create({
   },
   title: { fontSize: 20, marginBottom: 20 },
 });
-
 

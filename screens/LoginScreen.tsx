@@ -57,7 +57,6 @@
 //     };
 
 //     try {
-//       console.log(`🚀 Sending login request to ${BASE_URL}/api/user/login with:`, { username, password });
 //       const res = await fetch(`${BASE_URL}/api/user/login`, {
 //         method: 'POST',
 //         headers: { 'Content-Type': 'application/json' },
@@ -67,7 +66,6 @@
       
 //       console.log("✅ Fetch completed. Status:", res.status);
 //       const text = await res.text();
-//       console.log("📜 Raw response:", text);
 
 //       if (res.status === 401) {
 //         Alert.alert('Login failed', 'Invalid username or password');
@@ -209,20 +207,14 @@ export default function LoginScreen() {
     }
 
     setLoading(true);
-    console.log("🚀 BASE_URL in runtime:", BASE_URL);
-
     try {
-      console.log(`🚀 Sending login request to ${BASE_URL}/api/user/login with:`, { username, password });
-
       const res = await fetch(`${BASE_URL}/api/user/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
       });
 
-      console.log("✅ Fetch completed. Status:", res.status);
       const rawText = await res.text();
-      console.log("📜 Raw response:", rawText);
 
       if (res.status === 401) {
         Alert.alert('Login failed', 'Invalid username or password');

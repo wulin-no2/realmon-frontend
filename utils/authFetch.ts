@@ -7,8 +7,6 @@ export const authFetch = async (
 ): Promise<Response> => {
   try {
     const token = await AsyncStorage.getItem('token');
-    console.log("token is", token);
-
     const headers = {
       ...(options.headers || {}),
       'Content-Type': 'application/json',
@@ -26,4 +24,3 @@ export const authFetch = async (
     throw err;
   }
 };
-
