@@ -10,12 +10,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Enforce English-only repository text
+        run: |
+          if git grep -nI -P '[\x{3400}-\x{4DBF}\x{4E00}-\x{9FFF}\x{F900}-\x{FAFF}]' -- .; then
+            echo "CJK characters are not allowed in repository text files."
+            exit 1
+          fi
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: npm
       - run: npm ci
-      - run: npx tsc --noEmit
-      - run: npx expo export --platform web --output-dir web-build
+      - run: npm test -- --ci
+      - run: npm run typecheck
+      - run: npm run build:web
         env:
           EXPO_PUBLIC_API_BASE_URL: http://localhost:8080

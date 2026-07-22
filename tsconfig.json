@@ -1,17 +1,18 @@
 {
   "compilerOptions": {
-    "target": "es2016",
-    "module": "Node16",
+    "target": "ESNext",
+    "module": "preserve",
     "jsx": "react-native",
-    "moduleResolution": "node16",
+    "moduleResolution": "bundler",
     "allowJs": true,
     "esModuleInterop": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "types": ["jest", "node"]
   },
-  "include": ["src", "config", "scripts"],
-  "exclude": ["node_modules", "dist", "build"],
+  "include": ["**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", "dist", "build", "web-build"],
   "extends": "expo/tsconfig.base"
 }
