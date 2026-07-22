@@ -7,10 +7,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Platform } from 'react-native';
 import { showLocation } from 'react-native-map-link';
 import { authFetch } from '../utils/authFetch';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RootStackParamList } from '../navigation/AppNavigator';
 
+type Props = NativeStackScreenProps<RootStackParamList, 'RealmonDetail'>;
 
-
-const RealmonDetailScreen = ({ route, navigation }) => {
+const RealmonDetailScreen = ({ route }: Props) => {
   const {
     speciesId,
     speciesName,
@@ -222,4 +224,3 @@ const styles = StyleSheet.create({
 });
 
 export default RealmonDetailScreen;
-

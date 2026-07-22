@@ -62,3 +62,15 @@ npm run android
 - A physical phone must use the development computer's LAN address, such as `http://192.168.1.100:8080`.
 
 Do not commit `.env`; only `.env.example` is tracked.
+
+## Testing
+
+Run the same checks used by CI:
+
+```bash
+npm test -- --ci
+npm run typecheck
+EXPO_PUBLIC_API_BASE_URL=http://localhost:8080 npm run build:web
+```
+
+Jest tests use `jest-expo` and React Native Testing Library. Add behavior-focused tests under `__tests__/` when changing authentication, API access, navigation, or screen states.
