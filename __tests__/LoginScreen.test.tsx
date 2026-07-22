@@ -48,6 +48,17 @@ describe('LoginScreen', () => {
       ['userId', '42'],
       ['username', 'test-user'],
     ]));
+    expect(global.fetch).toHaveBeenCalledWith(
+      'http://localhost:8080/api/user/login',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: 'test-user',
+          password: 'secure-password',
+        }),
+      }
+    );
     expect(mockReset).toHaveBeenCalledWith({
       index: 0,
       routes: [{ name: 'Home' }],
