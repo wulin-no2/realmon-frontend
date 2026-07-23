@@ -63,6 +63,24 @@ npm run android
 
 Do not commit `.env`; only `.env.example` is tracked.
 
+### Optional ngrok tunnel
+
+Use an ngrok tunnel when a physical device cannot reach the backend through your local network. Set these values in `.env`:
+
+```bash
+USE_NGROK=true
+NGROK_AUTHTOKEN=your-ngrok-authtoken
+API_PORT=8080
+```
+
+Then start Expo through the tunnel helper:
+
+```bash
+npm run dev-start
+```
+
+Get the authtoken from the ngrok dashboard. Never commit the token.
+
 ## Testing
 
 Run the same checks used by CI:

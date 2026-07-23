@@ -168,8 +168,15 @@ function startExpo() {
 (async () => {
   if (USE_NGROK) {
     console.log(`🌐 Starting ngrok on http://localhost:${API_PORT}...`);
-    const ngrok = await import('ngrok'); // dynamic import , safer
-    const url = await ngrok.default.connect(parseInt(API_PORT));
+    const ngrok = await import('@ngrok/ngrok');
+    const listener = await ngrok.forward({
+      addr: parseInt(API_PORT, 10),
+      authtoken_from_env: true,
+    });
+    const url = listener.url();
+    if (!url) {
+      throw new Error('ngrok did not provide a public URL');
+    }
     console.log(`🟢 ngrok tunnel active at: ${url}`);
     process.env.EXPO_PUBLIC_API_BASE_URL = url;
     startExpo();
